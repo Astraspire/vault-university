@@ -93,11 +93,10 @@ Run them from anywhere; they auto-discover the vault root (the nearest folder co
 #### `link_notes.py` — tag + wikilink EVERY file in the vault
 
 ```bash
-python3 <skill>/scripts/link_notes.py --dry-run     # report only, no writes
-python3 <skill>/scripts/link_notes.py                # apply changes
+python3 <skill>/scripts/link_notes.py
 ```
 
-It does four things, in this order:
+That's it. Drop your notes into the vault and run it once. It does four things, in this order:
 
 1. **Tags orphaned files.** If a file has no `tags:` line, it adds one. Course files get the course
    code, module, and type tags. Non-course files get area-appropriate tags:
@@ -112,9 +111,8 @@ It does four things, in this order:
    that points to exactly one real file is rewritten to `[[path/to/file|Some Title]]`. This is what
    wires concepts → people → courses into one resolvable graph.
 
-Before running, read `link_notes.py` so you know exactly what it will change. It is idempotent:
-running it twice adds nothing the second time. Run `--dry-run` first, read the report, then run it
-for real.
+It is idempotent — running it twice changes nothing the second time, so it is safe to run
+repeatedly or on a schedule.
 
 #### `extract_meta.py` — index every file in the vault (prints by default)
 
@@ -156,20 +154,15 @@ things being tracked. Do not confuse "linking notes" with "updating comfort tier
 
 ## LINKING WORKFLOW (step-by-step)
 
-1. Read `VAULT_ROOT/_templates/VAULT-CONFIG.md` → get the real `VAULT_ROOT` path.
-2. Read `link_notes.py` → know exactly what it will change.
-3. Run `python3 <skill>/scripts/link_notes.py --dry-run` → read the report.
-4. Confirm the report matches intent. If it does not, stop — read the script, adjust, do not apply
-   a wrong change.
-5. Run `python3 <skill>/scripts/link_notes.py` → apply.
-6. Run `python3 <skill>/scripts/extract_meta.py` → read the per-area summary.
-7. Verify: open a sample of the changed files and confirm the links and tags landed correctly.
-8. Log the session to the vault xLog (see the vault-xlog skill).
+1. Run `python3 <skill>/scripts/link_notes.py` → tags and links every file in the vault.
+2. Run `python3 <skill>/scripts/extract_meta.py` → read the per-area summary to confirm the vault
+   looks right.
+3. Verify: open a sample of the changed files and confirm the links and tags landed correctly.
+4. Log the session to the vault xLog (see the vault-xlog skill).
 
 ## VERIFYING THE LINKING (do not skip)
 
 - Re-read the changed files (open them) — confirm tags and `[[wikilinks]]` are present and correct.
-- Confirm the dry-run report and the applied run agree (no surprise changes).
 - Confirm NO file was left without tags (spot-check an xlog log and a person file).
 - If you cannot verify, say "I don't know" — do not claim linking succeeded without evidence.
 
